@@ -1,4 +1,4 @@
-pragma solidity ^1.0.0;
+pragma solidity ^0.4.0;
 
 contract PayMany {
 
@@ -11,7 +11,7 @@ contract PayMany {
 		if ((value * list.length) != msg.value || value < (value * list.length) || value > msg.value)
 			throw;
 
-		for (int i = 0; i < list.length, i++){
+		for (uint i = 0; i < list.length; i++){
 			if (!list[i].send(value))
 				throw;
 		}
@@ -22,15 +22,16 @@ contract PayMany {
 	function PayValsToList(address[] list, uint[] values) public payable {
 
 		uint sum = 0;
+		uint i;
 
 		// if there's not one value specified per address throw
 		if (list.length != values.length)
 			throw;
 
-		for (int i = 0; i < values.length; i++){
-			sum += value[i];
+		for (i = 0; i < values.length; i++){
+			sum += values[i];
 			// make sure we only try to send what we have, and some overflow checks
-			if (sum > msg.value || sum < value[i])
+			if (sum > msg.value || sum < values[i])
 				throw;
 		}
 
@@ -39,8 +40,8 @@ contract PayMany {
 		if (sum != msg.value)
 			throw;
 
-		for (int i = 0; i < list.length, i++){
-			if (!list[i].send(value[i]))
+		for (i = 0; i < list.length; i++){
+			if (!list[i].send(values[i]))
 				throw;
 		}
 
